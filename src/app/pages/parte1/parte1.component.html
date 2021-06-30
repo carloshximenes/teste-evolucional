@@ -1,0 +1,71 @@
+<div class="p-grid">
+  <div class="p-col-12 p-md-8 p-md-offset-2">
+    <form [formGroup]="formulario" (submit)="(false)">
+      <p-card header="teste">
+        <div class="p-grid">
+          <div class="p-col-12 p-md-4">
+            <p-dropdown
+              [options]="listaSerie"
+              optionLabel="name"
+              formControlName="serie"
+              placeholder="Selecione uma série"
+            ></p-dropdown>
+          </div>
+          <div class="p-col-12 p-md-4">
+            <p-dropdown
+              [options]="listaClasse"
+              optionLabel="name"
+              formControlName="classe"
+              placeholder="Selecione uma classe"
+            ></p-dropdown>
+          </div>
+          <div class="p-col-6 p-md-2">
+            <button
+              pButton
+              label="Pesquisar"
+              class="p-button-success"
+              icon="pi pi-search"
+              (click)="pesquisar()"
+            ></button>
+          </div>
+          <div class="p-col-6 p-md-2">
+            <button
+              pButton
+              label="Limpar"
+              class="p-button-outlined p-button-danger"
+              icon="pi pi-trash"
+              (click)="limpar()"
+            ></button>
+          </div>
+          <div class="p-col-12 p-md-4">
+            <button
+              pButton
+              label="Gerar Novos Registros"
+              class="p-button-help"
+              icon="pi pi-plus"
+              (click)="gerarNovosRegistros()"
+            ></button>
+          </div>
+        </div>
+      </p-card>
+    </form>
+    <p-table [value]="listaAlunos" *ngIf="listaAlunos.length > 0">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>RA</th>
+          <th>Nome</th>
+          <th>Série</th>
+          <th>Classe</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-aluno>
+        <tr>
+          <td>{{ aluno.ra }}</td>
+          <td>{{ aluno.name }}</td>
+          <td>{{ getDescricaoSerie(aluno.degreeId) }}</td>
+          <td>{{ getDescricaoClasse(aluno.classId) }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

@@ -1,10 +1,11 @@
-import { Classe } from "./classe";
-import { Degree } from "./degree";
-
-export class Students {
+export class Student {
   id: number;
   ra: number;
   name: string;
-  degree: Degree;
-  class: Classe;
+  degreeId: number;
+  classId: number;
+
+  constructor(init?: Partial<Student>) {
+    Object.assign(this, null || init);
+  }
 }
