@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
@@ -14,12 +15,14 @@ import { Parte1Service } from './parte1.service';
   declarations: [Parte1Component],
   imports: [
     CommonModule,
+    HttpClientModule,
     Parte1RoutingModule,
     ReactiveFormsModule,
     CardModule,
     DropdownModule,
     ButtonModule,
     TableModule,
+    ChartsModule,
   ],
   providers: [Parte1Service],
 })
