@@ -1,0 +1,22 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+			"@dtos": ["src/app/core/dtos/index"],
+			"@entities": ["src/app/core/entities/index"],
+			"@enums": ["src/app/core/enums/index"],
+			"@helpers": ["src/app/core/helpers/index"],
+			"@resolvers": ["src/app/core/resolvers/index"],
+			"@services": ["src/app/core/services/index"]
+		},
+    "outDir": "../out-tsc/e2e",
+    "module": "commonjs",
+    "target": "es2018",
+    "types": [
+      "jasmine",
+      "jasminewd2",
+      "node"
+    ]
+  }
+}
