@@ -1,4 +1,5 @@
 export const Rotas = {
     INICIO: 'inicio',
-    PARTE1: 'parte1'
+    PARTE1: 'alunos',
+    PARTE2: 'professores'
 };

@@ -1,0 +1,51 @@
+@font-face {
+  font-family: gotham_mediumregular;
+  src: url("/assets/fonts/gotham_medium_regular.ttf") format("opentype");
+}
+
+.titulo_padrao {
+  color: #09a5df;
+  font-family: "gotham_mediumregular";
+  font-size: 2.3em;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.subtitulo_padrao {
+  color: #333;
+  margin-bottom: 30px;
+  font-family: "gotham_mediumregular";
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+:host::ng-deep {
+  .card {
+    cursor: pointer;
+    .p-card {
+      text-align: center;
+      font-size: 20px;
+      color: white;
+    }
+    i.pi {
+      font-size: 6rem;
+    }
+    &.card_atividade {
+      .p-card {
+        background-color: #09a5df;
+      }
+    }
+    &.card_atividade_reverso {
+      .p-card {
+        background-color: white;
+        color: #09a5df;
+      }
+    }
+    &.card_opcoes {
+      .p-card {
+        background-color: #005391;
+      }
+    }
+  }
+}

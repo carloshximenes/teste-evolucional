@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: Rotas.PARTE1,
+    redirectTo: Rotas.INICIO,
     pathMatch: 'full',
   },
 ];
