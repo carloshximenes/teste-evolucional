@@ -1,7 +1,7 @@
 <div class="p-grid">
   <div class="p-col-12">
     <form [formGroup]="formulario" (submit)="(false)">
-      <p-card header="teste">
+      <p-card header="Listar Alunos">
         <div class="p-grid">
           <div class="p-col-12 p-md-4">
             <p-dropdown
@@ -9,6 +9,7 @@
               optionLabel="name"
               formControlName="serie"
               placeholder="Selecione uma série"
+              [showClear]="true"
             ></p-dropdown>
           </div>
           <div class="p-col-12 p-md-4">
@@ -17,6 +18,7 @@
               optionLabel="name"
               formControlName="classe"
               placeholder="Selecione uma classe"
+              [showClear]="true"
             ></p-dropdown>
           </div>
           <div class="p-col-6 p-md-2">
@@ -35,15 +37,6 @@
               class="p-button-outlined p-button-danger"
               icon="pi pi-trash"
               (click)="limpar()"
-            ></button>
-          </div>
-          <div class="p-col-12 p-md-4">
-            <button
-              pButton
-              label="Gerar Novos Registros"
-              class="p-button-help"
-              icon="pi pi-plus"
-              (click)="gerarNovosRegistros()"
             ></button>
           </div>
         </div>
@@ -97,6 +90,15 @@
           [chartType]="barChartType"
         >
         </canvas>
+      </div>
+      <div class="p-col-12">
+        <button
+          pButton
+          label="Gerar Novos Registros"
+          class="p-button-help"
+          icon="pi pi-plus"
+          (click)="gerarNovosRegistros()"
+        ></button>
       </div>
     </p-card>
   </div>
