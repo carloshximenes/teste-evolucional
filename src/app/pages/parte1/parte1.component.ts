@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
+import { LazyLoadEvent } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { Classe, Degree, Student } from 'src/app/core/entities';
 import { ClasseEnum } from 'src/app/core/enums';
@@ -23,6 +24,10 @@ export class Parte1Component implements OnInit {
   public listaAlunos: Array<Student> = [];
   public listaSerie: Array<Degree>;
   public listaClasse: Array<Classe>;
+
+  public first: number = 0;
+  public rows: number = 5;
+  public totalRegistros: number;
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -58,6 +63,7 @@ export class Parte1Component implements OnInit {
 
   ngOnInit(): void {
     this.criarFormulario();
+    this.service.limparListaAluno();
     this.service
       .getListaSerie()
       .pipe(take(1))
@@ -76,6 +82,14 @@ export class Parte1Component implements OnInit {
   }
 
   public pesquisar(): void {
+    const event = {
+      first: 0,
+      rows: this.rows,
+    };
+    this.pesquisarPorFiltro(event);
+  }
+
+  public pesquisarPorFiltro(event: LazyLoadEvent): void {
     const { classe, serie } = this.formulario.getRawValue();
     this.service
       .getListaAluno()
@@ -87,7 +101,10 @@ export class Parte1Component implements OnInit {
         if (serie != null) {
           res = res.filter((a) => a.degreeId == serie.id);
         }
-        this.listaAlunos = res;
+        this.first = event.first;
+        this.listaAlunos = res.slice(event.first, event.first + event.rows);
+
+        this.totalRegistros = res.length;
         this.calcularValoresGrafico(res);
       });
   }
@@ -99,12 +116,16 @@ export class Parte1Component implements OnInit {
 
   public gerarNovosRegistros(): void {
     this.service
-      .gerarNovosRegistros(this.listaAlunos, 300)
+      .gerarNovosRegistros(300)
       .pipe(take(1))
       .subscribe((novaLista) => {
         this.listaAlunos = novaLista;
       });
-    this.pesquisar();
+    const event = {
+      first: this.first,
+      rows: this.rows,
+    };
+    this.pesquisarPorFiltro(event);
   }
 
   private calcularValoresGrafico(alunos: Student[]): void {

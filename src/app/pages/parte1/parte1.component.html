@@ -53,7 +53,18 @@
 
   <div class="p-col-12 p-md-8" *ngIf="listaAlunos.length > 0">
     <p-card>
-      <p-table [value]="listaAlunos">
+      <p-table
+        [value]="listaAlunos"
+        [lazy]="true"
+        [paginator]="true"
+        [rows]="rows"
+        [first]="first"
+        [totalRecords]="totalRegistros"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="{first} até {last} de {totalRecords} registros"
+        [lazyLoadOnInit]="false"
+        (onLazyLoad)="pesquisarPorFiltro($event)"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th>RA</th>
