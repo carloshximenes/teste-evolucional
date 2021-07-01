@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
-import { LazyLoadEvent } from 'primeng/api';
+import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { Classe, Degree, Student } from 'src/app/core/entities';
 import { ClasseEnum } from 'src/app/core/enums';
@@ -16,7 +16,8 @@ import { Parte1Service } from './parte1.service';
 export class Parte1Component implements OnInit {
   constructor(
     private service: Parte1Service,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private messageService: MessageService
   ) {}
 
   public formulario: FormGroup;
@@ -97,10 +98,6 @@ export class Parte1Component implements OnInit {
     });
   }
 
-  // public pesquisar(): void {
-  //   this.pesquisarPorFiltro();
-  // }
-
   public pesquisar(event: LazyLoadEvent = null): void {
     const { classe, serie } = this.formulario.getRawValue();
     this.service
@@ -114,9 +111,12 @@ export class Parte1Component implements OnInit {
           res = res.filter((a) => a.degreeId == serie.id);
         }
         this.first = event ? event.first : 0;
-        this.listaAlunos = res.slice(this.first, this.first + this.rows);
-
+        if(res.length == 0) {
+          this.messageService.add({severity:'warn', summary: 'Atenção', detail: 'Não encontramos nenhum estudante com os parâmetros informados'});
+          return;
+        }
         this.totalRegistros = res.length;
+        this.listaAlunos = res.slice(this.first, this.first + this.rows);
         this.calcularValoresGrafico(res);
       });
   }
@@ -132,6 +132,7 @@ export class Parte1Component implements OnInit {
       .pipe(take(1))
       .subscribe((novaLista) => {
         this.listaAlunos = novaLista;
+        this.messageService.add({severity:'success', summary: 'Sucesso', detail: 'Foram gerados 300 novos estudantes aleatoriamente'});
       });
     const event = {
       first: this.first,
@@ -183,6 +184,7 @@ export class Parte1Component implements OnInit {
 
   public salvarEstudante(): void {
     if (this.formularioEstudante.invalid) {
+      this.messageService.add({severity:'warn', summary: 'Atenção', detail: 'Favor preencher todos os campos obrigatórios'});
       return;
     }
 
@@ -190,13 +192,15 @@ export class Parte1Component implements OnInit {
       .salvarEstudante(this.formularioEstudante.value)
       .pipe(take(1))
       .subscribe((res) => {
-        this.exibirModalAtualizarEstudante = false;
         if (!res) {
+          this.messageService.add({severity:'error', summary: 'Erro', detail: 'Não foi possível atualizar os dados do estudante'});
           return;
         }
+        this.exibirModalAtualizarEstudante = false;
         const event = {
           first: this.first,
         };
+        this.messageService.add({severity:'success', summary: 'Sucesso', detail: 'Os dados do estudante foram atualizados com sucesso'});
         this.pesquisar(event);
       });
   }
