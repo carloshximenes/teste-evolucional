@@ -1,0 +1,170 @@
+<p-toast position="top-center"></p-toast>
+<div class="p-grid">
+  <div class="p-col-1 p-offset-11">
+    <button pButton pRipple type="button" label="Voltar" class="p-button-rounded p-button-info" icon="pi pi-arrow-left" (click)="voltarTelaInicio()"></button>
+  </div>
+  <div class="p-col-12">
+    <form [formGroup]="formulario" (submit)="(false)">
+      <p-card header="Listar Alunos">
+        <div class="p-grid">
+          <div class="p-col-12 p-md-4">
+            <p-dropdown
+              [options]="listaSerie"
+              optionLabel="name"
+              formControlName="serie"
+              placeholder="Selecione uma série"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+          <div class="p-col-12 p-md-4">
+            <p-dropdown
+              [options]="listaClasse"
+              optionLabel="name"
+              formControlName="classe"
+              placeholder="Selecione uma classe"
+              [showClear]="true"
+            ></p-dropdown>
+          </div>
+          <div class="p-col-6 p-md-2">
+            <button
+              pButton
+              label="Pesquisar"
+              class="p-button-success"
+              icon="pi pi-search"
+              (click)="pesquisar()"
+            ></button>
+          </div>
+          <div class="p-col-6 p-md-2">
+            <button
+              pButton
+              label="Limpar"
+              class="p-button-outlined p-button-danger"
+              icon="pi pi-trash"
+              (click)="limpar()"
+            ></button>
+          </div>
+        </div>
+      </p-card>
+    </form>
+  </div>
+
+  <div class="p-col-12 p-md-8" *ngIf="listaAlunos.length > 0">
+    <p-card>
+      <p-table
+        [value]="listaAlunos"
+        [lazy]="true"
+        [paginator]="true"
+        [rows]="rows"
+        [first]="first"
+        [totalRecords]="totalRegistros"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="{first} até {last} de {totalRecords} registros"
+        [lazyLoadOnInit]="false"
+        (onLazyLoad)="pesquisar($event)"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>RA</th>
+            <th>Nome</th>
+            <th>Série</th>
+            <th>Classe</th>
+            <th>Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-aluno>
+          <tr>
+            <td>{{ aluno.ra }}</td>
+            <td>{{ aluno.name }}</td>
+            <td>{{ getDescricaoSerie(aluno.degreeId) }}</td>
+            <td>{{ getDescricaoClasse(aluno.classId) }}</td>
+            <td>
+              <button
+                pButton
+                pRipple
+                type="button"
+                icon="pi pi-user-edit"
+                class="p-button-rounded p-button-secondary"
+                (click)="editarEstudante(aluno)"
+              ></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+  </div>
+
+  <div class="p-col-12 p-md-4" *ngIf="listaAlunos.length > 0">
+    <p-card>
+      <div style="display: block">
+        <canvas
+          baseChart
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [legend]="barChartLegend"
+          [chartType]="barChartType"
+        >
+        </canvas>
+      </div>
+      <div class="p-col-12">
+        <button
+          pButton
+          label="Gerar Novos Registros"
+          class="p-button-help"
+          icon="pi pi-plus"
+          (click)="gerarNovosRegistros()"
+        ></button>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<p-dialog
+  header="Atualizar Dados Estudante"
+  [(visible)]="exibirModalAtualizarEstudante"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '50vw' }"
+  [closable]="false"
+  #dialog
+>
+  <form [formGroup]="formularioEstudante" (submit)="(false)">
+    <div class="p-grid">
+      <div class="p-col-12 p-md-8">
+        <input type="text" pInputText formControlName="name" />
+      </div>
+      <div class="p-col-12 p-md-4">
+        <p-dropdown
+          [options]="listaClasse"
+          optionLabel="name"
+          formControlName="classe"
+          placeholder="Selecione uma classe"
+          [appendTo]="dialog"
+        ></p-dropdown>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-danger"
+      (click)="exibirModalAtualizarEstudante = false"
+      label="Cancelar"
+      styleClass="p-button-text"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-save"
+      class="p-button-success"
+      (click)="salvarEstudante()"
+      label="Salvar"
+      styleClass="p-button-text"
+    ></button>
+  </ng-template>
+</p-dialog>

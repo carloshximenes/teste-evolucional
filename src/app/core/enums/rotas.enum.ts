@@ -1,3 +1,4 @@
-export const ROTAS = {
-    inicio: 'inicio'
+export const Rotas = {
+    INICIO: 'inicio',
+    PARTE1: 'parte1'
 };
