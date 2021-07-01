@@ -74,7 +74,6 @@ export class Parte1Component implements OnInit {
   }
 
   private inicializarObjetos(): void {
-    this.service.limparListaAluno();
     this.service
       .getListaSerie()
       .pipe(take(1))
