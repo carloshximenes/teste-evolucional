@@ -5,6 +5,11 @@ import { Rotas } from './core/enums';
 
 const routes: Routes = [
   {
+    path: Rotas.INICIO,
+    loadChildren: () =>
+      import('./pages/inicio/inicio.module').then((m) => m.InicioModule),
+  },
+  {
     path: Rotas.PARTE1,
     loadChildren: () =>
       import('./pages/parte1/parte1.module').then((m) => m.Parte1Module),

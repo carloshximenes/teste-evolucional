@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { Classe, Degree, Student } from 'src/app/core/entities';
-import { ClasseEnum } from 'src/app/core/enums';
+import { ClasseEnum, Rotas } from 'src/app/core/enums';
 import { Parte1Service } from './parte1.service';
 
 @Component({
@@ -14,12 +15,6 @@ import { Parte1Service } from './parte1.service';
   styleUrls: ['./parte1.component.scss'],
 })
 export class Parte1Component implements OnInit {
-  constructor(
-    private service: Parte1Service,
-    private formBuilder: FormBuilder,
-    private messageService: MessageService
-  ) {}
-
   public formulario: FormGroup;
   public formularioEstudante: FormGroup;
 
@@ -64,6 +59,13 @@ export class Parte1Component implements OnInit {
     { data: [4], label: 'E' },
     { data: [5], label: 'F' },
   ];
+
+  constructor(
+    private service: Parte1Service,
+    private formBuilder: FormBuilder,
+    private messageService: MessageService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.criarFormulario();
@@ -111,8 +113,13 @@ export class Parte1Component implements OnInit {
           res = res.filter((a) => a.degreeId == serie.id);
         }
         this.first = event ? event.first : 0;
-        if(res.length == 0) {
-          this.messageService.add({severity:'warn', summary: 'Atenção', detail: 'Não encontramos nenhum estudante com os parâmetros informados'});
+        if (res.length == 0) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Atenção',
+            detail:
+              'Não encontramos nenhum estudante com os parâmetros informados',
+          });
           return;
         }
         this.totalRegistros = res.length;
@@ -132,7 +139,11 @@ export class Parte1Component implements OnInit {
       .pipe(take(1))
       .subscribe((novaLista) => {
         this.listaAlunos = novaLista;
-        this.messageService.add({severity:'success', summary: 'Sucesso', detail: 'Foram gerados 300 novos estudantes aleatoriamente'});
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Foram gerados 300 novos estudantes aleatoriamente',
+        });
       });
     const event = {
       first: this.first,
@@ -184,7 +195,11 @@ export class Parte1Component implements OnInit {
 
   public salvarEstudante(): void {
     if (this.formularioEstudante.invalid) {
-      this.messageService.add({severity:'warn', summary: 'Atenção', detail: 'Favor preencher todos os campos obrigatórios'});
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção',
+        detail: 'Favor preencher todos os campos obrigatórios',
+      });
       return;
     }
 
@@ -193,15 +208,27 @@ export class Parte1Component implements OnInit {
       .pipe(take(1))
       .subscribe((res) => {
         if (!res) {
-          this.messageService.add({severity:'error', summary: 'Erro', detail: 'Não foi possível atualizar os dados do estudante'});
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível atualizar os dados do estudante',
+          });
           return;
         }
         this.exibirModalAtualizarEstudante = false;
         const event = {
           first: this.first,
         };
-        this.messageService.add({severity:'success', summary: 'Sucesso', detail: 'Os dados do estudante foram atualizados com sucesso'});
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Os dados do estudante foram atualizados com sucesso',
+        });
         this.pesquisar(event);
       });
+  }
+
+  public voltarTelaInicio(): void {
+    this.router.navigate([Rotas.INICIO]);
   }
 }
