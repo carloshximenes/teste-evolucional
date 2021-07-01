@@ -8,13 +8,13 @@
         "degreeId": 1,
         "classes": [
           {
-            "classPosition": 1
+            "classId": 1
           },
           {
-            "classPosition": 2
+            "classId": 2
           },
           {
-            "classPosition": 3
+            "classId": 3
           }
         ]
       },
@@ -22,7 +22,7 @@
         "degreeId": 2,
         "classes": [
           {
-            "classPosition": 1
+            "classId": 1
           }
         ]
       }
@@ -37,10 +37,10 @@
         "degreeId": 8,
         "classes": [
           {
-            "classPosition": 1
+            "classId": 1
           },
           {
-            "classPosition": 2
+            "classId": 2
           }
         ]
       },
@@ -48,7 +48,7 @@
         "degreeId": 9,
         "classes": [
           {
-            "classPosition": 1
+            "classId": 1
           }
         ]
       }
