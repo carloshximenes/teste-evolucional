@@ -1,3 +1,30 @@
+@font-face {
+  font-family: gotham_mediumregular;
+  src: url("/assets/fonts/gotham_medium_regular.ttf") format("opentype");
+}
+.titulo_padrao {
+  color: #09a5df;
+  font-family: "gotham_mediumregular";
+  font-size: 2.3em;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.cabecalho {
+  color: #09a5df;
+  font-family: "gotham_mediumregular";
+  margin-left: 5px;
+}
+
+.subtitulo_padrao {
+  color: #333;
+  margin-bottom: 30px;
+  font-family: "gotham_mediumregular";
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
 .body {
   background: #eaeef0;
   padding: 30px 0 30px;
