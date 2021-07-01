@@ -5,7 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Parte1RoutingModule } from './parte1-routing.module';
 import { Parte1Component } from './parte1.component';
@@ -23,6 +25,8 @@ import { Parte1Service } from './parte1.service';
     ButtonModule,
     TableModule,
     ChartsModule,
+    DialogModule,
+    InputTextModule,
   ],
   providers: [Parte1Service],
 })

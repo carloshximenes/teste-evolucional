@@ -57,9 +57,7 @@ export class Parte1Service {
     return this.gerarNumeroAleatorio(13);
   }
 
-  public gerarNovosRegistros(
-    quantidade: number
-  ): Observable<Student[]> {
+  public gerarNovosRegistros(quantidade: number): Observable<Student[]> {
     const lista = JSON.parse(this.storageService.getObjeto('students'));
     let proximoId = this.getAlunoUltimoId(lista) + 1;
     for (let i = 0; i < quantidade; i++) {
@@ -76,5 +74,23 @@ export class Parte1Service {
 
     this.updateListaAluno(JSON.stringify(lista));
     return of(lista);
+  }
+
+  public salvarEstudante(estudante: any): Observable<boolean> {
+    const { id, name, classe } = estudante;
+    const lista = JSON.parse(this.storageService.getObjeto('students'));
+
+    const alunoIndex = lista.findIndex((a) => a.id == id);
+    if(alunoIndex < 0) {
+      return of(false);
+    }
+    lista[alunoIndex] = {
+      ...lista[alunoIndex],
+      name,
+      classId: classe.id,
+    };
+
+    this.updateListaAluno(JSON.stringify(lista));
+    return of(true);
   }
 }

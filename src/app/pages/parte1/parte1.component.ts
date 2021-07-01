@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { LazyLoadEvent } from 'primeng/api';
@@ -20,6 +20,7 @@ export class Parte1Component implements OnInit {
   ) {}
 
   public formulario: FormGroup;
+  public formularioEstudante: FormGroup;
 
   public listaAlunos: Array<Student> = [];
   public listaSerie: Array<Degree>;
@@ -27,7 +28,9 @@ export class Parte1Component implements OnInit {
 
   public first: number = 0;
   public rows: number = 5;
-  public totalRegistros: number;
+  public totalRegistros: number = 0;
+
+  public exibirModalAtualizarEstudante: boolean = false;
 
   public barChartOptions: ChartOptions = {
     responsive: true,
@@ -63,6 +66,11 @@ export class Parte1Component implements OnInit {
 
   ngOnInit(): void {
     this.criarFormulario();
+    this.criarFormularioEditarEstudante();
+    this.inicializarObjetos();
+  }
+
+  private inicializarObjetos(): void {
     this.service.limparListaAluno();
     this.service
       .getListaSerie()
@@ -81,15 +89,19 @@ export class Parte1Component implements OnInit {
     });
   }
 
-  public pesquisar(): void {
-    const event = {
-      first: 0,
-      rows: this.rows,
-    };
-    this.pesquisarPorFiltro(event);
+  private criarFormularioEditarEstudante(): void {
+    this.formularioEstudante = this.formBuilder.group({
+      id: [null, Validators.required],
+      name: [null, Validators.required],
+      classe: [null, Validators.required],
+    });
   }
 
-  public pesquisarPorFiltro(event: LazyLoadEvent): void {
+  // public pesquisar(): void {
+  //   this.pesquisarPorFiltro();
+  // }
+
+  public pesquisar(event: LazyLoadEvent = null): void {
     const { classe, serie } = this.formulario.getRawValue();
     this.service
       .getListaAluno()
@@ -101,8 +113,8 @@ export class Parte1Component implements OnInit {
         if (serie != null) {
           res = res.filter((a) => a.degreeId == serie.id);
         }
-        this.first = event.first;
-        this.listaAlunos = res.slice(event.first, event.first + event.rows);
+        this.first = event ? event.first : 0;
+        this.listaAlunos = res.slice(this.first, this.first + this.rows);
 
         this.totalRegistros = res.length;
         this.calcularValoresGrafico(res);
@@ -123,9 +135,8 @@ export class Parte1Component implements OnInit {
       });
     const event = {
       first: this.first,
-      rows: this.rows,
     };
-    this.pesquisarPorFiltro(event);
+    this.pesquisar(event);
   }
 
   private calcularValoresGrafico(alunos: Student[]): void {
@@ -157,5 +168,36 @@ export class Parte1Component implements OnInit {
   public getDescricaoClasse(classe: number): string {
     const classeSelecionada = this.listaClasse.find((s) => s.id == classe);
     return classeSelecionada ? classeSelecionada.name : 'Não Informada';
+  }
+
+  public editarEstudante(estudante: Student): void {
+    this.formularioEstudante.reset();
+    this.formularioEstudante.patchValue(estudante);
+
+    const classeSelecionada = this.listaClasse.find(
+      (c) => c.id == estudante.classId
+    );
+    this.formularioEstudante.get('classe').patchValue(classeSelecionada);
+    this.exibirModalAtualizarEstudante = true;
+  }
+
+  public salvarEstudante(): void {
+    if (this.formularioEstudante.invalid) {
+      return;
+    }
+
+    this.service
+      .salvarEstudante(this.formularioEstudante.value)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.exibirModalAtualizarEstudante = false;
+        if (!res) {
+          return;
+        }
+        const event = {
+          first: this.first,
+        };
+        this.pesquisar(event);
+      });
   }
 }
