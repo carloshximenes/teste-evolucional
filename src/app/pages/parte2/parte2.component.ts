@@ -8,8 +8,10 @@ import {
   Degree,
   Matter,
   Relationship,
+  Student,
   Teacher,
 } from 'src/app/core/entities';
+import { Rotas } from 'src/app/core/enums';
 import { Parte2Service } from './parte2.service';
 
 @Component({
@@ -26,12 +28,14 @@ export class Parte2Component implements OnInit {
   public listaSerie: Array<Degree>;
   public listaClasse: Array<Classe>;
   public listaMateria: Array<Matter>;
+  public listaAlunos: Array<Student>;
 
   public first: number = 0;
   public rows: number = 5;
   public totalRegistros: number = 0;
 
   public exibirModalNovoRelacionamento: boolean = false;
+  public exibirModalAlunos: boolean = false;
 
   constructor(
     private service: Parte2Service,
@@ -151,6 +155,35 @@ export class Parte2Component implements OnInit {
           first: this.first,
         };
         this.pesquisar(event);
+      });
+  }
+
+  public voltarTelaInicio(): void {
+    this.router.navigate([Rotas.INICIO]);
+  }
+
+  public buscarAlunosMatriculados(relacionamento: Relationship): void {
+    this.listaAlunos = [];
+    this.service
+      .getListaAluno()
+      .pipe(take(1))
+      .subscribe((res) => {
+        if (relacionamento.class != null) {
+          res = res.filter((a) => a.classId == relacionamento.class.id);
+        }
+        if (relacionamento.degree != null) {
+          res = res.filter((a) => a.degreeId == relacionamento.degree.id);
+        }
+        if (res.length == 0) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Atenção',
+            detail: 'Não existem alunos matriculados para essa turma',
+          });
+          return;
+        }        
+        this.listaAlunos = res;        
+        this.exibirModalAlunos = true;
       });
   }
 }

@@ -6,6 +6,7 @@ import {
   Degree,
   Matter,
   Relationship,
+  Student,
   Teacher,
 } from 'src/app/core/entities';
 import { StorageService } from 'src/app/core/services/storage.service';
@@ -14,12 +15,16 @@ import degrees from 'src/assets/degrees.json';
 import matters from 'src/assets/matters.json';
 import relationships from 'src/assets/relationships.json';
 import teachers from 'src/assets/teachers.json';
+import { Parte1Service } from '../parte1/parte1.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Parte2Service {
-  constructor(private storageService: StorageService) {}
+  constructor(
+    private storageService: StorageService,
+    private alunoService: Parte1Service
+  ) {}
 
   public getListaSerie(): Observable<Degree[]> {
     return of(degrees);
@@ -133,11 +138,8 @@ export class Parte2Service {
 
   private relacionamentoJahExiste(objeto: any): boolean {
     const { professor, materia, serie, classe } = objeto;
-    const relacionamentos = JSON.parse(
-      this.storageService.getObjeto('relationships')
-    );
 
-    const detalhesProfessor = relacionamentos.filter(
+    const detalhesProfessor = relationships.filter(
       (r) => r.teacherId == professor.id
     );
     if (detalhesProfessor.length == 0) {
@@ -167,5 +169,9 @@ export class Parte2Service {
     const detalhesClasse = detalhesSerie[0].find((s) => s.classId == classe.id);
 
     return detalhesClasse != null;
+  }
+
+  public getListaAluno(): Observable<Student[]> {
+    return this.alunoService.getListaAluno();
   }
 }

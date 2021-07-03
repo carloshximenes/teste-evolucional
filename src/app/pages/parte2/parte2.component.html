@@ -59,7 +59,7 @@
     </form>
   </div>
 
-  <div class="p-col-12" *ngIf="lista.length > 0">
+  <div class="p-col-12" *ngIf="lista?.length > 0">
     <p-card>
       <p-table
         [value]="lista"
@@ -75,7 +75,11 @@
       >
         <ng-template pTemplate="caption">
           <div class="p-d-flex p-ai-center p-jc-end">
-            <p-button icon="pi pi-plus" label="Novo relacionamento" (click)="novoRelacionamento()"></p-button>
+            <p-button
+              icon="pi pi-plus"
+              label="Novo relacionamento"
+              (click)="novoRelacionamento()"
+            ></p-button>
           </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -100,7 +104,7 @@
                 type="button"
                 icon="pi pi-users"
                 class="p-button-rounded p-button-secondary"
-                (click)="editarEstudante(aluno)"
+                (click)="buscarAlunosMatriculados(relacionamento)"
               ></button>
             </td>
           </tr>
@@ -108,78 +112,125 @@
       </p-table>
     </p-card>
   </div>
-
-  <p-dialog
-    header="Gerar novo relacionamento"
-    [(visible)]="exibirModalNovoRelacionamento"
-    [modal]="true"
-    [draggable]="false"
-    [resizable]="false"
-    [style]="{ width: '50vw' }"
-    [closable]="false"
-    #dialog
-  >
-    <form [formGroup]="formularioProfessor" (submit)="(false)">
-      <div class="p-grid">
-        <div class="p-col-12 p-md-6">
-          <p-dropdown
-            [options]="listaProfessor"
-            optionLabel="name"
-            formControlName="professor"
-            placeholder="Selecione um professor"
-            [appendTo]="dialog"
-          ></p-dropdown>
-        </div>
-        <div class="p-col-12 p-md-6">
-          <p-dropdown
-            [options]="listaMateria"
-            optionLabel="name"
-            formControlName="materia"
-            placeholder="Selecione uma materia"
-            [appendTo]="dialog"
-          ></p-dropdown>
-        </div>
-        <div class="p-col-12 p-md-6">
-          <p-dropdown
-            [options]="listaSerie"
-            optionLabel="name"
-            formControlName="serie"
-            placeholder="Selecione uma serie"
-            [appendTo]="dialog"
-          ></p-dropdown>
-        </div>
-        <div class="p-col-12 p-md-6">
-          <p-dropdown
-            [options]="listaClasse"
-            optionLabel="name"
-            formControlName="classe"
-            placeholder="Selecione uma classe"
-            [appendTo]="dialog"
-          ></p-dropdown>
-        </div>
-      </div>
-    </form>
-    <ng-template pTemplate="footer">
-      <button
-        pButton
-        pRipple
-        type="button"
-        icon="pi pi-times"
-        class="p-button-outlined p-button-danger"
-        (click)="exibirModalNovoRelacionamento = false"
-        label="Cancelar"
-        styleClass="p-button-text"
-      ></button>
-      <button
-        pButton
-        pRipple
-        type="button"
-        icon="pi pi-save"
-        class="p-button-success"
-        (click)="salvarNovoRelacionamento()"
-        label="Salvar"
-        styleClass="p-button-text"
-      ></button>
-    </ng-template>
-  </p-dialog>
 </div>
+
+<p-dialog
+  header="Gerar novo relacionamento"
+  [(visible)]="exibirModalNovoRelacionamento"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '50vw' }"
+  [closable]="false"
+  #dialog
+>
+  <form [formGroup]="formularioProfessor" (submit)="(false)">
+    <div class="p-grid">
+      <div class="p-col-12 p-md-6">
+        <p-dropdown
+          [options]="listaProfessor"
+          optionLabel="name"
+          formControlName="professor"
+          placeholder="Selecione um professor"
+          [appendTo]="dialog"
+        ></p-dropdown>
+      </div>
+      <div class="p-col-12 p-md-6">
+        <p-dropdown
+          [options]="listaMateria"
+          optionLabel="name"
+          formControlName="materia"
+          placeholder="Selecione uma materia"
+          [appendTo]="dialog"
+        ></p-dropdown>
+      </div>
+      <div class="p-col-12 p-md-6">
+        <p-dropdown
+          [options]="listaSerie"
+          optionLabel="name"
+          formControlName="serie"
+          placeholder="Selecione uma serie"
+          [appendTo]="dialog"
+        ></p-dropdown>
+      </div>
+      <div class="p-col-12 p-md-6">
+        <p-dropdown
+          [options]="listaClasse"
+          optionLabel="name"
+          formControlName="classe"
+          placeholder="Selecione uma classe"
+          [appendTo]="dialog"
+        ></p-dropdown>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-danger"
+      (click)="exibirModalNovoRelacionamento = false"
+      label="Cancelar"
+      styleClass="p-button-text"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-save"
+      class="p-button-success"
+      (click)="salvarNovoRelacionamento()"
+      label="Salvar"
+      styleClass="p-button-text"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Alunos matriculados"
+  [(visible)]="exibirModalAlunos"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '50vw' }"
+  [closable]="false"
+  #dialog
+>
+  <div class="p-grid">
+    <div class="p-col-12">
+      <p-table
+        [value]="listaAlunos"
+        [scrollable]="true"
+        [rows]="listaAlunos?.length"
+        scrollHeight="250px"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>RA</th>
+            <th>Nome</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-aluno>
+          <tr>
+            <td>{{ aluno?.ra }}</td>
+            <td>{{ aluno?.name }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      type="button"
+      icon="pi pi-times"
+      class="p-button-outlined p-button-danger"
+      (click)="exibirModalAlunos = false"
+      label="Sair"
+      styleClass="p-button-text"
+    ></button>
+  </ng-template>
+</p-dialog>
