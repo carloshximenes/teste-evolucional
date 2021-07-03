@@ -6,7 +6,7 @@ import { Label } from 'ng2-charts';
 import { LazyLoadEvent, MessageService } from 'primeng/api';
 import { take } from 'rxjs/operators';
 import { Classe, Degree, Student } from 'src/app/core/entities';
-import { ClasseEnum, Rotas } from 'src/app/core/enums';
+import { Rotas } from 'src/app/core/enums';
 import { Parte1Service } from './parte1.service';
 
 @Component({
@@ -51,14 +51,7 @@ export class Parte1Component implements OnInit {
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
 
-  public barChartData: ChartDataSets[] = [
-    { data: [0], label: 'A' },
-    { data: [1], label: 'B' },
-    { data: [2], label: 'C' },
-    { data: [3], label: 'D' },
-    { data: [4], label: 'E' },
-    { data: [5], label: 'F' },
-  ];
+  public barChartData: ChartDataSets[];
 
   constructor(
     private service: Parte1Service,
@@ -77,7 +70,12 @@ export class Parte1Component implements OnInit {
     this.service
       .getListaSerie()
       .pipe(take(1))
-      .subscribe((res) => (this.listaSerie = res));
+      .subscribe((res) => {
+        this.listaSerie = res;
+        this.barChartData = this.listaSerie.map((s) => {
+          return { data: [0], label: s.name };
+        });
+      });
     this.service
       .getListaClasse()
       .pipe(take(1))
@@ -151,24 +149,12 @@ export class Parte1Component implements OnInit {
   }
 
   private calcularValoresGrafico(alunos: Student[]): void {
-    this.barChartData[0].data = [
-      [...alunos].filter((res) => res.classId == ClasseEnum.A).length,
-    ];
-    this.barChartData[1].data = [
-      [...alunos].filter((res) => res.classId == ClasseEnum.B).length,
-    ];
-    this.barChartData[2].data = [
-      [...alunos].filter((res) => res.classId == ClasseEnum.C).length,
-    ];
-    this.barChartData[3].data = [
-      [...alunos].filter((res) => res.classId == ClasseEnum.D).length,
-    ];
-    this.barChartData[4].data = [
-      [...alunos].filter((res) => res.classId == ClasseEnum.E).length,
-    ];
-    this.barChartData[5].data = [
-      [...alunos].filter((res) => res.classId == ClasseEnum.F).length,
-    ];
+    let classId = 1;
+    this.barChartData.map((b) => {
+      b.data = [[...alunos].filter((res) => res.degreeId == classId).length];
+      classId++;
+      return b;
+    });
   }
 
   public getDescricaoSerie(serie: number): string {
