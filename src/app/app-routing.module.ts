@@ -15,6 +15,11 @@ const routes: Routes = [
       import('./pages/parte1/parte1.module').then((m) => m.Parte1Module),
   },
   {
+    path: Rotas.PARTE2,
+    loadChildren: () =>
+      import('./pages/parte2/parte2.module').then((m) => m.Parte2Module),
+  },
+  {
     path: '**',
     redirectTo: Rotas.INICIO,
     pathMatch: 'full',
