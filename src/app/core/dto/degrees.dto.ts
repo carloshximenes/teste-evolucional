@@ -1,6 +1,10 @@
-import { DegreeDto } from './degree.dto';
+import { ClasseDto } from './classe.dto';
 
 export class DegreesDto {
   degreeId: number;
-  classes: Array<DegreeDto>;
+  classes: Array<ClasseDto>;
+
+  constructor(init?: Partial<DegreesDto>) {
+    Object.assign(this, null || init);
+  }
 }

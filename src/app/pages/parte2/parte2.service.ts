@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { ClasseDto } from 'src/app/core/dto/classe.dto';
+import { DegreesDto } from 'src/app/core/dto/degrees.dto';
 import { RelationshipDto } from 'src/app/core/dto/relationship.dto';
 import {
   Classe,
@@ -51,33 +53,35 @@ export class Parte2Service {
 
   public getLista(): Observable<Relationship[]> {
     if (this.storageService.getObjeto('relationships') == null) {
-      this.gerarRelacionamentos();
+      this.updateListaRelacionamento(JSON.stringify(relationships));
     }
 
-    const listaOrdenada = JSON.parse(
-      this.storageService.getObjeto('relationships')
-    ).sort(
+    const listaOrdenada = this.gerarRelacionamentos().sort(
       (a, b) =>
         a.teacher.id - b.teacher.id ||
         a.matter.id - b.matter.id ||
-        a.degree.id - b.degree.id ||
-        a.class.id - b.class.id
+        a.degree.id - b.degree.id
     );
     return of(listaOrdenada);
   }
 
-  private gerarRelacionamentos(): void {
+  private gerarRelacionamentos(): Relationship[] {
     this.gerarListaProfessor();
     const lista: Relationship[] = [];
-    const listProfessor = JSON.parse(this.storageService.getObjeto('teachers'));
+    const listaProfessor = JSON.parse(
+      this.storageService.getObjeto('teachers')
+    );
     const listaClasse = classes['classes'];
     const listaSerie = degrees;
     const listaMaterias = matters;
+    const listaRelacionamentos = JSON.parse(
+      this.storageService.getObjeto('relationships')
+    );
 
-    relationships.map((dto: RelationshipDto) => {
+    listaRelacionamentos.map((dto: RelationshipDto) => {
       const professor = new Teacher({
         id: dto.teacherId,
-        name: listProfessor.find((p) => p.id == dto.teacherId)['name'],
+        name: listaProfessor.find((p) => p.id == dto.teacherId)['name'],
       });
       const materia = new Matter({
         id: dto.matterId,
@@ -90,24 +94,27 @@ export class Parte2Service {
           name: listaSerie.find((s) => s.id == d.degreeId)['name'],
         });
 
+        const classes = [];
         d.classes.map((c) => {
           const classe = new Classe({
             id: c.classId,
             name: listaClasse.find((cl) => cl.id == c.classId)['name'],
           });
-          const novoRelacionamento = new Relationship({
-            id: dto.id,
-            teacher: professor,
-            matter: materia,
-            degree: serie,
-            class: classe,
-          });
-          lista.push(novoRelacionamento);
+          classes.push(classe);
         });
+
+        const novoRelacionamento = new Relationship({
+          id: dto.id,
+          teacher: professor,
+          matter: materia,
+          degree: serie,
+          class: classes.sort((a, b) => a.id - b.id),
+        });
+        lista.push(novoRelacionamento);
       });
     });
 
-    this.updateListaRelacionamento(JSON.stringify(lista));
+    return lista;
   }
 
   private updateListaProfessor(lista: any): void {
@@ -118,57 +125,125 @@ export class Parte2Service {
     this.storageService.salvarObjeto('relationships', lista);
   }
 
-  public salvarNovoRelacionamento(objeto: any): Observable<boolean> {
-    if (this.relacionamentoJahExiste(objeto)) {
-      return of(false);
-    }
+  public salvarNovoRelacionamento(
+    novoRelacionamento: any
+  ): Observable<boolean> {
+    const { professor, materia, serie, classe } = novoRelacionamento;
+    let novaLista = [];
+
     const listaRelacionamentos = JSON.parse(
       this.storageService.getObjeto('relationships')
     );
-    const novoRelacionamento = new Relationship({
-      teacher: objeto.professor,
-      degree: objeto.serie,
-      matter: objeto.materia,
-      class: objeto.classe,
-    });
-    listaRelacionamentos.push(novoRelacionamento);
-    this.updateListaRelacionamento(JSON.stringify(listaRelacionamentos));
+
+    const detalhesProfessor = listaRelacionamentos.filter(
+      (r) => r.teacherId == professor.id
+    );
+
+    const detalhesMateria = detalhesProfessor.find(
+      (p) => p.matterId == materia.id
+    );
+
+    if (detalhesMateria == null) {
+      const novaMateria = this.adicionarNovaMateria(
+        detalhesProfessor[0],
+        novoRelacionamento
+      );
+      novaLista = [...listaRelacionamentos, novaMateria];
+    } else {
+      const detalhesSerie = detalhesMateria.degrees.find(
+        (m) => m.degreeId == serie.id
+      );
+      if (detalhesSerie == null) {
+        const novaSerie = this.adicionarNovaSerie(
+          detalhesMateria,
+          novoRelacionamento
+        );
+        novaLista = [...listaRelacionamentos, novaSerie];
+      } else {
+        const detalhesClasse = detalhesSerie.classes.find(
+          (s) => s.classId == classe.id
+        );
+        if (detalhesClasse == null) {
+          this.adicionarNovaClasse(
+            detalhesMateria,
+            detalhesSerie.degreeId,
+            novoRelacionamento
+          );
+          novaLista = [...listaRelacionamentos];
+        } else {
+          return of(false);
+        }
+      }
+    }
+
+    this.updateListaRelacionamento(JSON.stringify(novaLista));
     return of(true);
   }
 
-  private relacionamentoJahExiste(objeto: any): boolean {
-    const { professor, materia, serie, classe } = objeto;
+  private adicionarNovaMateria(
+    objeto: any,
+    novoRelacionamento: any
+  ): RelationshipDto {
+    const { materia, serie, classe } = novoRelacionamento;
+    const { id, teacherId } = objeto;
 
-    const detalhesProfessor = relationships.filter(
-      (r) => r.teacherId == professor.id
-    );
-    if (detalhesProfessor.length == 0) {
-      return false;
-    }
+    const novaClasse = new ClasseDto();
+    novaClasse.classId = classe.id;
 
-    const detalhesMateria = detalhesProfessor.map((p) => {
-      if (p.matterId == materia.id) {
-        return p.degrees;
-      }
-    });
+    const novaSerie = new DegreesDto();
+    novaSerie.degreeId = serie.id;
+    novaSerie.classes = [novaClasse];
 
-    if (detalhesMateria.length == 0) {
-      return false;
-    }
+    const relacionamentoDto = new RelationshipDto();
+    relacionamentoDto.id = id;
+    relacionamentoDto.teacherId = teacherId;
+    relacionamentoDto.matterId = materia.id;
+    relacionamentoDto.degrees = [novaSerie];
 
-    const detalhesSerie = detalhesMateria[0].map((m) => {
-      if (m.degreeId == serie.id) {
-        return m.classes;
-      }
-    });
+    return relacionamentoDto;
+  }
 
-    if (detalhesSerie.length == 0) {
-      return false;
-    }
+  private adicionarNovaSerie(
+    objeto: any,
+    novoRelacionamento: any
+  ): RelationshipDto {
+    const { serie, classe } = novoRelacionamento;
+    const { id, teacherId, matterId } = objeto;
 
-    const detalhesClasse = detalhesSerie[0].find((s) => s.classId == classe.id);
+    const novaClasse = new ClasseDto();
+    novaClasse.classId = classe.id;
 
-    return detalhesClasse != null;
+    const novaSerie = new DegreesDto();
+    novaSerie.degreeId = serie.id;
+    novaSerie.classes = [novaClasse];
+
+    const relacionamentoDto = new RelationshipDto();
+    relacionamentoDto.id = id;
+    relacionamentoDto.teacherId = teacherId;
+    relacionamentoDto.matterId = matterId;
+    relacionamentoDto.degrees = [novaSerie];
+
+    return relacionamentoDto;
+  }
+
+  private adicionarNovaClasse(
+    objeto: any,
+    serieId: number,
+    novoRelacionamento: any
+  ): void {
+    const { serie, classe } = novoRelacionamento;
+    const { id, teacherId, degrees } = objeto;
+
+    const classesAtuais = degrees.find((d) => d.degreeId == serieId).classes;
+    const novaClasse = new ClasseDto();
+    novaClasse.classId = classe.id;
+    classesAtuais.push(novaClasse);
+
+    const relacionamentoDto = new RelationshipDto();
+    relacionamentoDto.id = id;
+    relacionamentoDto.teacherId = teacherId;
+    relacionamentoDto.matterId = serie.id;
+    relacionamentoDto.degrees = [...degrees];
   }
 
   public getListaAluno(): Observable<Student[]> {

@@ -87,7 +87,7 @@
             <th>Nome Professor</th>
             <th>Matéria</th>
             <th>Série</th>
-            <th>Classe</th>
+            <th>Classe(s)</th>
             <th>Alunos</th>
           </tr>
         </ng-template>
@@ -96,7 +96,7 @@
             <td>{{ relacionamento?.teacher?.name }}</td>
             <td>{{ relacionamento?.matter?.name }}</td>
             <td>{{ relacionamento?.degree?.name }}</td>
-            <td>{{ relacionamento?.class?.name }}</td>
+            <td>{{ exibirClasses(relacionamento?.class) }}</td>
             <td>
               <button
                 pButton
@@ -210,12 +210,14 @@
           <tr>
             <th>RA</th>
             <th>Nome</th>
+            <th>Classe</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-aluno>
           <tr>
             <td>{{ aluno?.ra }}</td>
             <td>{{ aluno?.name }}</td>
+            <td>{{ getDescricaoClasse(aluno.classId) }}</td>
           </tr>
         </ng-template>
       </p-table>

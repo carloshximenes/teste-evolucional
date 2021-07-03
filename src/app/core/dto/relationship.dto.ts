@@ -5,4 +5,8 @@ export class RelationshipDto {
   teacherId: number;
   matterId: number;
   degrees: Array<DegreesDto>;
+
+  constructor(init?: Partial<RelationshipDto>) {
+    Object.assign(this, null || init);
+  }
 }

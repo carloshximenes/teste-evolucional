@@ -8,7 +8,7 @@ export class Relationship {
   teacher: Teacher;
   matter: Matter;
   degree: Degree;
-  class: Classe;
+  class: Classe[];
 
   constructor(init?: Partial<Relationship>) {
     Object.assign(this, null || init);

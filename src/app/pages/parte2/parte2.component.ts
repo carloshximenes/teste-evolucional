@@ -97,7 +97,10 @@ export class Parte2Component implements OnInit {
       .pipe(take(1))
       .subscribe((res) => {
         if (classe != null) {
-          res = res.filter((p) => p.class.id == classe.id);
+          // res = res.filter((p) => p.class.id == classe.id);
+          res = res.filter((p) => {
+            p.class.find((c) => c.id == classe.id);
+          });
         }
         if (serie != null) {
           res = res.filter((p) => p.degree.id == serie.id);
@@ -168,9 +171,6 @@ export class Parte2Component implements OnInit {
       .getListaAluno()
       .pipe(take(1))
       .subscribe((res) => {
-        if (relacionamento.class != null) {
-          res = res.filter((a) => a.classId == relacionamento.class.id);
-        }
         if (relacionamento.degree != null) {
           res = res.filter((a) => a.degreeId == relacionamento.degree.id);
         }
@@ -181,9 +181,18 @@ export class Parte2Component implements OnInit {
             detail: 'Não existem alunos matriculados para essa turma',
           });
           return;
-        }        
-        this.listaAlunos = res;        
+        }
+        this.listaAlunos = res;
         this.exibirModalAlunos = true;
       });
+  }
+
+  public getDescricaoClasse(classe: number): string {
+    const classeSelecionada = this.listaClasse.find((s) => s.id == classe);
+    return classeSelecionada ? classeSelecionada.name : 'Não Informada';
+  }
+  
+  public exibirClasses(classes: Classe[]): string {
+    return classes.map(c => c.name).join(' | ');
   }
 }
