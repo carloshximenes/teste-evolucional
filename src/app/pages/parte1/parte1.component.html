@@ -1,11 +1,14 @@
 <p-toast position="top-center"></p-toast>
 <div class="p-grid">
-  <div class="p-col-1 p-offset-11">
+  <div class="p-col">
+    <h1 class="cabecalho">Listar Alunos</h1>
+  </div>
+  <div class="p-col-1" style="align-self: center;">
     <button pButton pRipple type="button" label="Voltar" class="p-button-rounded p-button-info" icon="pi pi-arrow-left" (click)="voltarTelaInicio()"></button>
   </div>
   <div class="p-col-12">
     <form [formGroup]="formulario" (submit)="(false)">
-      <p-card header="Listar Alunos">
+      <p-card>
         <div class="p-grid">
           <div class="p-col-12 p-md-4">
             <p-dropdown

@@ -1,1 +1,30 @@
-<p>inicio works!</p>
+<p-toast position="top-center"></p-toast>
+<div class="p-grid">
+  <div class="p-col-12 p-md-8 p-md-offset-2">
+    <h1 class="titulo_padrao">Bem Vindo(a)</h1>
+    <h2 class="subtitulo_padrao">
+      Sistema responsável para realizar o controle de Alunos e Professores da
+      Evolucional
+    </h2>
+    <div class="p-grid">
+      <div class="p-col-12 p-md-4">
+        <p-card class="card card_atividade" (click)="navegar(Rotas.PARTE1)">
+          <i class="pi pi-users"></i>
+          <p>Listar Alunos</p>
+        </p-card>
+      </div>
+      <div class="p-col-12 p-md-4">
+        <p-card class="card card_atividade_reverso">
+          <i class="pi pi-briefcase"></i>
+          <p>Listar Professores</p>
+        </p-card>
+      </div>
+      <div class="p-col-12 p-md-4">
+        <p-card class="card card_opcoes" (click)="limparTabelas()">
+          <i class="pi pi-table"></i>
+          <p>Restar Tabelas</p>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>
