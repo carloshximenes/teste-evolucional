@@ -3,32 +3,48 @@
   <div class="p-col">
     <h1 class="cabecalho">Listar Alunos</h1>
   </div>
-  <div class="p-col-1" style="align-self: center;">
-    <button pButton pRipple type="button" label="Voltar" class="p-button-rounded p-button-info" icon="pi pi-arrow-left" (click)="voltarTelaInicio()"></button>
+  <div class="p-col-1" style="align-self: center">
+    <button
+      pButton
+      pRipple
+      type="button"
+      label="Voltar"
+      class="p-button-rounded p-button-info"
+      icon="pi pi-arrow-left"
+      (click)="voltarTelaInicio()"
+    ></button>
   </div>
   <div class="p-col-12">
     <form [formGroup]="formulario" (submit)="(false)">
       <p-card>
         <div class="p-grid">
           <div class="p-col-12 p-md-4">
-            <p-dropdown
-              [options]="listaSerie"
-              optionLabel="name"
-              formControlName="serie"
-              placeholder="Selecione uma série"
-              [showClear]="true"
-            ></p-dropdown>
+            <span class="p-float-label">
+              <p-dropdown
+                [options]="listaSerie"
+                optionLabel="name"
+                formControlName="serie"
+                [autoDisplayFirst]="false"
+                [showClear]="true"
+                id="formularioSerie"
+              ></p-dropdown>
+              <label for="formularioSerie">Série</label>
+            </span>
           </div>
           <div class="p-col-12 p-md-4">
-            <p-dropdown
-              [options]="listaClasse"
-              optionLabel="name"
-              formControlName="classe"
-              placeholder="Selecione uma classe"
-              [showClear]="true"
-            ></p-dropdown>
+            <span class="p-float-label">
+              <p-dropdown
+                [options]="listaClasse"
+                optionLabel="name"
+                formControlName="classe"
+                [autoDisplayFirst]="false"
+                [showClear]="true"
+                id="formularioClasse"
+              ></p-dropdown>
+              <label for="formularioClasse">Classe</label>
+            </span>
           </div>
-          <div class="p-col-6 p-md-2">
+          <div class="p-col-6 p-md-2" style="margin-top: 10px">
             <button
               pButton
               label="Pesquisar"
@@ -37,7 +53,7 @@
               (click)="pesquisar()"
             ></button>
           </div>
-          <div class="p-col-6 p-md-2">
+          <div class="p-col-6 p-md-2" style="margin-top: 10px">
             <button
               pButton
               label="Limpar"
@@ -51,7 +67,7 @@
     </form>
   </div>
 
-  <div class="p-col-12 p-md-8" *ngIf="listaAlunos?.length > 0">
+  <div class="p-col-12 p-md-7" *ngIf="listaAlunos?.length > 0">
     <p-card>
       <p-table
         [value]="listaAlunos"
@@ -96,7 +112,7 @@
     </p-card>
   </div>
 
-  <div class="p-col-12 p-md-4" *ngIf="listaAlunos?.length > 0">
+  <div class="p-col-12 p-md-5" *ngIf="listaAlunos?.length > 0">
     <p-card>
       <div style="display: block">
         <canvas
@@ -133,18 +149,31 @@
   #dialog
 >
   <form [formGroup]="formularioEstudante" (submit)="(false)">
-    <div class="p-grid">
+    <div class="p-grid" style="margin-top: 10px">
       <div class="p-col-12 p-md-8">
-        <input type="text" pInputText formControlName="name" />
+        <span class="p-float-label">
+          <input
+            type="text"
+            id="formularioEstudanteNome"
+            pInputText
+            formControlName="name"
+          />
+          <label for="formularioEstudanteNome">Nome</label>
+        </span>
       </div>
       <div class="p-col-12 p-md-4">
-        <p-dropdown
-          [options]="listaClasse"
-          optionLabel="name"
-          formControlName="classe"
-          placeholder="Selecione uma classe"
-          [appendTo]="dialog"
-        ></p-dropdown>
+        <span class="p-float-label">
+          <p-dropdown
+            [options]="listaClasse"
+            optionLabel="name"
+            formControlName="classe"
+            [appendTo]="dialog"
+            [autoDisplayFirst]="false"
+            [showClear]="true"
+            id="formularioEstudanteClasse"
+          ></p-dropdown>
+          <label for="formularioEstudanteClasse">Classe</label>
+        </span>
       </div>
     </div>
   </form>
