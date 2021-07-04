@@ -17,7 +17,7 @@ Esta aplicação tem como intuito apresentar um modelo de gerenciamento de aluno
 
 ## Execução
 
-Executar o comando `ng serve` para iniciar o projeto. A URL de acesso é `http://localhost:4200/`.
+Executar o comando `ng serve` no console para iniciar a aplicação. A URL de acesso é `http://localhost:4200/`.
 
 ## Observações
 
