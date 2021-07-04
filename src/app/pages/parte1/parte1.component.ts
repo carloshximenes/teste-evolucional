@@ -149,10 +149,10 @@ export class Parte1Component implements OnInit {
   }
 
   private calcularValoresGrafico(alunos: Student[]): void {
-    let classId = 1;
+    let degreeId = 1;
     this.barChartData.map((b) => {
-      b.data = [[...alunos].filter((res) => res.degreeId == classId).length];
-      classId++;
+      b.data = [[...alunos].filter((res) => res.degreeId == degreeId).length];
+      degreeId++;
       return b;
     });
   }
