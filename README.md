@@ -1,6 +1,6 @@
 # Teste Evolucional
 
-Esta aplicação tem como intuito apresentar um gerenciamento simples de alunos e professores da Evolucional.
+Esta aplicação tem como intuito apresentar um modelo de gerenciamento de alunos e professores da Evolucional.
 
 ### Features Gerenciamento de Alunos
  - [x] Criar combo de filtro para série e classe;
@@ -21,7 +21,7 @@ Executar o comando `ng serve` para iniciar o projeto. A URL de acesso é `http:/
 
 ## Observações
 
-Como não foi utilizando nenhum back-end para o desenvolvimento desta aplicação, todas as informações adicionais aos JSONs informados foram armazenadas no `localStorage` e, na tela inicio existe uma opção de resetar as informações para os valores originais.
+Como não foi utilizando nenhum back-end para o desenvolvimento desta aplicação, todas as informações adicionais aos JSONs informados foram armazenadas no `localStorage` e, na tela inicio desta aplicação, existe uma opção de resetar as informações para os valores originais.
 
 ## Angular
 
