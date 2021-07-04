@@ -96,14 +96,14 @@ export class Parte2Component implements OnInit {
       .getLista()
       .pipe(take(1))
       .subscribe((res) => {
-        if (classe != null) {
-          // res = res.filter((p) => p.class.id == classe.id);
-          res = res.filter((p) => {
-            p.class.find((c) => c.id == classe.id);
-          });
-        }
         if (serie != null) {
           res = res.filter((p) => p.degree.id == serie.id);
+        }
+        if (classe != null) {
+          res = res.filter((p) => {
+            const classeExiste = p.class.find(c => c.id == classe.id);         
+            return classeExiste != null;
+          });
         }
         this.first = event ? event.first : 0;
         if (res.length == 0) {
@@ -191,8 +191,8 @@ export class Parte2Component implements OnInit {
     const classeSelecionada = this.listaClasse.find((s) => s.id == classe);
     return classeSelecionada ? classeSelecionada.name : 'Não Informada';
   }
-  
+
   public exibirClasses(classes: Classe[]): string {
-    return classes.map(c => c.name).join(' | ');
+    return classes.map((c) => c.name).join(' | ');
   }
 }
