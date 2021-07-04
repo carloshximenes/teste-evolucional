@@ -1,27 +1,28 @@
-# TesteEvolucional
+# Teste Evolucional
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.3.
+Esta aplicação tem como intuito apresentar um gerenciamento simples de alunos e professores da Evolucional.
 
-## Development server
+### Features Gerenciamento de Alunos
+ - [x] Criar combo de filtro para série e classe;
+ - [x] Popular a tela com as informações do estudante e suas relações;
+ - [x] Criar opção de editar nome e classe do estudante;
+ - [x] Criar botão para gerar 300 novos estudantes alocados em suas respectivas séries e classes de forma aleatória;
+ - [x] Criar gráfico apresentando a quantidade de estudantes por série.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+ ### Features Gerenciamento de Professores
+ - [x] Criar combo de filtro para série e classe;
+ - [x] Popular a tela com as informações do professor e suas relações;
+ - [x] Criar botão para permitir listar os alunos matriculados na respectiva série;
+ - [x] Criar formulário para permiti a criação de um novo relacionamento entre Professor x Matéria x Série x Classe.
 
-## Code scaffolding
+## Execução
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Executar o comando `ng serve` para iniciar o projeto. A URL de acesso é `http://localhost:4200/`.
 
-## Build
+## Observações
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Como não foi utilizando nenhum back-end para o desenvolvimento desta aplicação, todas as informações adicionais aos JSONs informados foram armazenadas no `localStorage` e, na tela inicio existe uma opção de resetar as informações para os valores originais.
 
-## Running unit tests
+## Angular
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+Versão utilizada: 10.2.3
